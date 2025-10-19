@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Travel Planner</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f3f6fb; padding: 20px; color: #333; }
+        .container { max-width: 900px; background: white; padding: 25px; margin: auto; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1, h2, h3 { text-align: center; color: #0057b7; }
+        form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, select, button { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
+        .full-width { grid-column: 1 / -1; }
+        button { background: #0057b7; color: white; font-size: 16px; cursor: pointer; margin-top: 20px; }
+        button:hover { background: #00429b; }
+        .plan-container { margin-top: 30px; }
+        .plan { margin-top: 15px; background: #f0f7ff; border-left: 6px solid #0057b7; padding: 15px; border-radius: 8px; }
+        .day-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .day-title { font-size: 1.2em; font-weight: bold; }
+        .day-activities { font-style: italic; color: #555; }
+        .day-description { line-height: 1.6; }
+        .day-cost { font-weight: bold; color: #2e8b57; text-align: right; margin-top: 10px; }
+        .error { color: red; text-align: center; font-weight: bold; }
+        .total-cost { margin-top: 25px; font-size: 1.5em; font-weight: bold; }
+        .suggestions { margin-top: 15px; border-top: 1px dashed #0057b7; padding-top: 10px; }
+        .suggestions h4 { margin-top: 0; text-align: left; font-size: 1em; }
+        .suggestion-item { font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Hyper-Intelligent Travel Planner</h1>
+        <form method="POST">
+            <div class="full-width"> <label for="destination">Destination:</label> <input type="text" id="destination" name="destination" placeholder="e.g. Goa, Delhi, Jaipur" required> </div>
+            <div> <label for="duration">Duration (Days):</label> <input type="number" id="duration" name="duration" min="1" placeholder="e.g. 3" required> </div>
+            <div> <label for="people">Number of People:</label> <input type="number" id="people" name="people" min="1" value="2" required> </div>
+            <div> <label for="age_group">Age Group:</label> <select id="age_group" name="age_group"> <option value="18-30 (Adventure)">18-30 (Adventure)</option> <option value="30-50 (Family & Leisure)">30-50 (Family & Leisure)</option> <option value="50+ (Relaxing & Cultural)">50+ (Relaxing & Cultural)</option> </select> </div>
+            <div> <label for="budget">Budget Style:</label> <select id="budget" name="budget"> <option value="Budget">Budget (₹)</option> <option value="Mid-Range" selected>Mid-Range (₹₹)</option> <option value="Luxury">Luxury (₹₹₹)</option> </select> </div>
+            <div class="full-width"> <label for="interests">Interests:</label> <input type="text" id="interests" name="interests" placeholder="e.g. beaches, food, history"> </div>
+            <div class="full-width"> <button type="submit">Generate AI Plan</button> </div>
+        </form>
+
+        {% if plan_data %}
+            <div class="plan-container">
+                {% if plan_data.error %}
+                    <p class="error"> {{ plan_data.error }}</p>
+                {% elif plan_data.plan %}
+                    <h2> Your AI-Generated Plan for {{ destination }}</h2>
+                    {% for day in plan_data.plan %}
+                        <div class="plan">
+                            <div class="day-header">
+                                <span class="day-title">Day {{ day.day }}</span>
+                                <span class="day-activities">{{ day.activities }}</span>
+                            </div>
+                            <p class="day-description">{{ day.description }}</p>
+                            
+                            <!-- This is the new section that displays the live restaurant suggestions -->
+                            {% if day.restaurant_suggestions %}
+                                <div class="suggestions">
+                                    <h4>Dinner Suggestions (closest first, with live traffic):</h4>
+                                    {% for resto in day.restaurant_suggestions %}
+                                        <div class="suggestion-item">
+                                            <b>{{ resto.name }}</b> ({{ resto.rating or 'N/A' }} ⭐) - Approx. {{ resto.travel_time }} away
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            <p class="day-cost">Day's Estimated Cost: {{ day.estimated_cost }}</p>
+                        </div>
+                    {% endfor %}
+                    
+                    {% if plan_data.grand_total %}
+                        <h3 class="total-cost">Total Estimated Trip Cost: {{ plan_data.grand_total }}</h3>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+
