@@ -1,0 +1,7 @@
+Aim Of The Project
+Planning the perfect tour is often overwhelming due to multiple factors like selecting destinations, managing time, finding restaurants, choosing transport, and staying within budget.
+Our project introduces an AI-driven Tour Planner that generates customized itineraries based on the traveler’s input—such as preferred tourist spots, number of days, and budget category (Low, Medium, Premium). The system integrates APIs to fetch real-time data on attractions, restaurants, accommodations, transportation, and weather.
+Unlike traditional static packages, our model creates dynamic, optimized, and budget-aware travel plans, ensuring a smooth, hassle-free, and personalized experience for every traveler.
+The primary goal is to create a final plan that is both time-efficient and budget-conscious.
+It is designed to significantly reduce the manual effort of trip planning.
+Ultimately, it enhances the travel experience by offering a seamless, all-in-one solution.
